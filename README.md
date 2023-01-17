@@ -1,6 +1,9 @@
 # Plume Blogger in Portainer
 1st I should note that this is NOT in any way related to or similar to Plume Creator. I was referred to it by something saying it was a Docker Interface for Plume Creator, & after much effort to get it working, discovered it was not what I wanted at all.
 
+This is a docker container related to `plumeorg/plume` as found on the site https://joinplu.me/
+
+
 But since I went through the trouble of getting it to work, I wanted to share it so others could avoid the troubles I went through.
 
 Plume has instructions for creating via a Docker-Compose... but it doesn't work with Portainer. Here's how to get around that
