@@ -72,11 +72,11 @@ This leaves us with a few problems if we are using Portainer to manage our Docke
 
 This creates a problem. I have 2 ways around this, using Portainer, both essentially the same thing, just done in different ways.
 
-#### Method 1 involves making the container hang & BASHing into the CLI to run the initialization commands.
+### Method 1 involves making the container hang & BASHing into the CLI to run the initialization commands.
 
 To do this we simply need to add a `command:` to the Docker-Compose so the container will be running. I accomplish this by using a sleep command. I have mine set to 9999 seconds, which is roughly 2¾ hours, more than enough time to get everything done. `command: sleep 9999 && mkdir -p /end` I added a simple directory creation command as it's my default command I use to have a container bypass it's default CMD & exit, but it shouldn't be necessary.
 
-#### Method 2 involves having the Docker-Compose run the commands without having to use the CLI. This has the benefit of being simpler in execution, but requires you to put the password you intend to use in plain text in the compose which, even if only there for a single run, may not be what many wish to do.
+### Method 2 involves having the Docker-Compose run the commands without having to use the CLI. This has the benefit of being simpler in execution, but requires you to put the password you intend to use in plain text in the compose which, even if only there for a single run, may not be what many wish to do.
 
 To do this I run a `command:` as well, but I wait 2 minutes for the database to fully startup, then run the commands. `sh -c "sleep 120 && plm migration run && plm search init && plm instance new -d '<<you.domain.ext>>' -n '<<instance name>>' -l '<<default license>>' && plm users new -n 'admin' -N 'AdminDisplayName' -b 'bio' -e 'admin@example.ext' -p '<<YOURPASSWORD>>' --admin`
 
