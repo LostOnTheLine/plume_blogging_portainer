@@ -62,7 +62,7 @@ The Official Instructions are as follows:
 > docker-compose up -d
 > ```
 
-This leaves us with a few problems if we are using docker
+This leaves us with a few problems if we are using Portainer to manage our Docker
 1. We don't need to curl the docker-compose.yaml, we're building it ourselves
 1. You need 
     1. to build the stack
