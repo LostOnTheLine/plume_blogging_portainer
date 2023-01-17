@@ -1,0 +1,77 @@
+---
+version: '3'
+services:
+  plume-postgres:
+    image: postgres:10.5
+    container_name: postgres
+    #env_file: ./.env
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Cancun
+      - BASE_URL=https://YOUR.DOMAIN.EXT/
+      - ROCKET_SECRET_KEY=randomstringhere    # generate one with openssl rand -base64 32
+                  # Mail settings
+      - MAIL_SERVER=smtp.example.org
+      - MAIL_USER=example
+      - MAIL_PASSWORD=123456
+      - MAIL_HELO_NAME=example.org
+                  # DATABASE SETUP
+      - POSTGRES_PASSWORD=passw0rd
+      - POSTGRES_USER=plume
+      - POSTGRES_DB=plume
+                  # you can safely leave those defaults
+      - DATABASE_URL=postgres://plume:passwOrd@plume-postgres:5432/plume
+      - MIGRATION_DIRECTORY=migrations/postgres
+      - USE_HTTPS=1
+      - ROCKET_ADDRESS=0.0.0.0
+      - ROCKET_PORT=7878
+    volumes:
+      - /docker/books/novels/plume/db/postgres:/var/lib/postgresql/data
+      - /docker/log/var/log:/var/log:rw
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+ ##################################################
+  plume:
+    image: plumeorg/plume:latest
+    container_name: plume
+    #env_file: ./.env
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Cancun
+      - BASE_URL=https://YOUR.DOMAIN.EXT/
+      - ROCKET_SECRET_KEY=randomstringhere    # generate one with openssl rand -base64 32
+                  # Mail settings
+      - MAIL_SERVER=smtp.example.org
+      - MAIL_USER=example
+      - MAIL_PASSWORD=123456
+      - MAIL_HELO_NAME=example.org
+                  # DATABASE SETUP
+      - POSTGRES_PASSWORD=passw0rd
+      - POSTGRES_USER=plume
+      - POSTGRES_DB=plume
+                  # you can safely leave those defaults
+      - DATABASE_URL=postgres://plume:passw0rd@plume-postgres:5432/plume
+      - MIGRATION_DIRECTORY=migrations/postgres
+      - USE_HTTPS=1
+      - ROCKET_ADDRESS=0.0.0.0
+      - ROCKET_PORT=7878
+    ports:
+      - 7878:7878
+    volumes:
+      - /docker/books/novels/plume/static/media:/app/static/media
+      - /docker/books/novels/plume/.env:/app/.env
+      - /docker/books/novels/plume/search_index:/app/search_index
+      - /docker/log/var/log:/var/log:rw
+      - /etc/localtime:/etc/localtime:ro
+    #command: sleep 9999 && mkdir -p /end >> /var/log/novels/plume-cli.log
+  #  command: >
+  #    sh -c "sleep 120 
+  #    && plm migration run
+  #    && plm search init
+  #    && plm instance new -d '<<you.domain.ext>>' -n "<<instance name>>" -l '<<default license>>'
+  #    && plm users new -n 'admin' -N 'AdminDisplayName' -b 'bio' -e 'admin@example.ext' -p '<<YOURPASSWORD>>' --admin
+    restart: unless-stopped
+    depends_on:
+      - plume-postgres
